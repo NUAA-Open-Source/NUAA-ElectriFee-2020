@@ -3,6 +3,8 @@
 from sensitive_data import card_url
 import requests
 import re
+import ast
+
 
 def get_elec(aid, account, roomid, room, area, areaname, buildingid, building):
     """
@@ -20,11 +22,9 @@ def get_elec(aid, account, roomid, room, area, areaname, buildingid, building):
     if return_data == "系统异常!":
         print("[+] Error! {}".format("系统异常!"))
         exit(0)
-    
-    elec_data = eval(return_data)
 
-    if elec_data['query_elec_roominfo']['retcode'] != "0":
-        print("[+] Error! {}".format(elec_data['query_elec_roominfo']['errmsg']))
+    elec_dict = ast.literal_eval(return_data)
 
-    elec_num = re.search(pattern=r'\d+.\d+|\d+', string=elec_data['query_elec_roominfo']['errmsg'])
-    return elec_num.group()
+    elec_msg = elec_dict["query_elec_roominfo"]["errmsg"]
+
+    return elec_msg
